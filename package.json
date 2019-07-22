@@ -1,0 +1,20 @@
+{
+  "name": "zcrypto",
+  "version": "1.0.0",
+  "description": "A z/OS crypto npm for z/OS",
+  "main": "index.js",
+  "scripts": {
+    "build": "node-gyp rebuild",
+    "clean": "node-gyp clean"
+  },
+  "keywords": [
+    "zos",
+    "crypto"
+  ],
+  "dependencies": {
+    "node-addon-api": "^1.6.3",
+    "node-forge": "^0.8.5"
+  },
+  "author": "Igor Todorovski",
+  "license": "ISC"
+}
