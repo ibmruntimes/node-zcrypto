@@ -55,7 +55,8 @@ Napi::Value ZCrypto::CreateKDB(const Napi::CallbackInfo &info) {
   const char *password =
       static_cast<std::string>(info[1].As<Napi::String>()).c_str();
 
-  return Napi::Number::New(env, createKDB_impl(filename, password, length, time, &(this->handle)));
+  return Napi::Number::New(env, createKDB_impl(filename, password, 
+                          length, time, &(this->handle)));
 }
 
 Napi::Value ZCrypto::OpenKeyRing(const Napi::CallbackInfo &info) {
@@ -91,7 +92,7 @@ Napi::Value ZCrypto::OpenKDB(const Napi::CallbackInfo &info) {
 Napi::Value ZCrypto::ImportKey(const Napi::CallbackInfo &info) {
   Napi::Env env = info.Env();
   if (info.Length() < 3) {
-    Napi::Error::New(env, "createKDB needs 3 arguments "
+    Napi::Error::New(env, "ImportKey needs 3 arguments "
                           "filename, password, label")
         .ThrowAsJavaScriptException();
     return Napi::Number::New(env, -1);
