@@ -1,6 +1,7 @@
 #include "zcrypto.h"
 #include <unistd.h>
 #include <sys/stat.h>
+#include <_Nascii.h>
 
 
 extern "C" int __chgfdccsid(int fd, unsigned short ccsid);
@@ -30,8 +31,17 @@ extern "C" int openKDB_impl( const char* filename, const char* password, gsk_han
     int num_records;
     gskdb_database_type type;
 	int rc = gsk_open_database( filename_e, password_e, 1, handle, &type, &num_records);
-	if (rc !=0 ) { printf("ERROR: %08x\n", rc); }
 	return rc;
+}
+
+extern "C" char* errorString_impl( int error ) {
+    __ae_thread_swapmode(__AE_EBCDIC_MODE);
+	const char* errorStr_e  = gsk_strerror( error );
+    __ae_thread_swapmode(__AE_ASCII_MODE);
+	char * errorStr_a = (char*)malloc(strlen(errorStr_e) + 1);
+	memcpy(errorStr_a, errorStr_e, strlen(errorStr_e) + 1);
+	__e2a_l(errorStr_a, strlen(errorStr_a) + 1);
+	return errorStr_a;
 }
 
 extern "C" int openKeyRing_impl( const char* ring_name, gsk_handle* handle) {
@@ -41,7 +51,6 @@ extern "C" int openKeyRing_impl( const char* ring_name, gsk_handle* handle) {
 	__a2e_l(ring_name_e, strlen(ring_name_e) + 1);
     int num_records;
 	int rc = gsk_open_keyring( ring_name_e, handle, &num_records);
-	if (rc !=0 ) { printf("ERROR: %08x\n", rc); }
 	return rc;
 }
 
@@ -58,7 +67,7 @@ extern "C" int exportKeyToFile_impl(const char* filename, const char* password, 
 
 int rc = gsk_export_key(*handle, label_e, gskdb_export_pkcs12v3_binary, x509_alg_pbeWithSha1And3DesCbc 
 , password_e,  &stream);
-    if (rc !=0 ) { printf("ERROR: %08x\n", rc); }
+    if (rc !=0 ) { return rc; }
 
     FILE *fileptr;
     fileptr = fopen(filename, "wb");  // Open the file in binary mode
@@ -83,7 +92,6 @@ extern "C" int exportKeyToBuffer_impl(const char* password, const char* label, g
 
     int rc = gsk_export_key(*handle, label_e, gskdb_export_pkcs12v3_binary, x509_alg_pbeWithSha1And3DesCbc 
 , password_e, stream);
-    if (rc !=0 ) { printf("ERROR: %08x\n", rc); }
     return rc;
 }
 
@@ -116,7 +124,6 @@ extern "C" int importKey_impl(const char* filename, const char* password, const 
 	gsk_buffer stream = {(unsigned int)((filelen+1)*sizeof(char)), (void*)buffer};
 	
 	int rc = gsk_import_key(*handle, label_e, password_e, &stream);
-	if (rc !=0 ) { printf("ERROR: %08x\n", rc); }
 	return rc;
 }
 

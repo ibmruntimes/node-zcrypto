@@ -17,7 +17,7 @@
           }],
         ],
 
-        "libraries": ["/usr/lib/GSKCMS64.x"],
+        "libraries": ["/usr/lib/GSKCMS64.x", "/usr/lib/GSKSSL64.x"],
         "dependencies": [
             "<!(node -p \"require('node-addon-api').gyp\")"
         ],

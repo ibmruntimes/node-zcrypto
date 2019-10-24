@@ -1,6 +1,12 @@
 # zcrypto
 This NodeJS module provides APIs to RACF keyrings and KDB (key databases)
 
+## Background
+
+This module leverages the Certificate Management Services (CMS) API.
+These APIs can be used to create/manage your own key database files,
+use certificates stored in the key database file or RACF key ring.
+
 ## Installation
 
 <!--
@@ -33,7 +39,7 @@ crypt.createKDB("my.kdb", "password", 10024, 0);
 crypt.openKDB("my.kdb", "password");
 
 // RACF Keyring
-//crypt.openKeyRing("ITODORO");
+crypt.openKeyRing("ITODORO");
 
 // Import a P12 file as Cert.p12 using password and label
 // Update only allowed for KDB
@@ -69,10 +75,12 @@ https.createServer(options, (req, res) => {
 ```
 
 ### How to generate a pkcs12 for import into KDB
-// Must be performed on a non-z/OS machine
+```bash
+// Must be performed on a non-z/OS machine and then transferred to z/OS as binary
 openssl genrsa -out privatekey.pem 1024 openssl req -new -key privatekey.pem -out certrequest.csr
 openssl x509 -req -in certrequest.csr -signkey privatekey.pem -out certificate.pem
 openssl pkcs12 -export -out Cert.p12 -in certificate.pem -inkey privatekey.pem -passin pass:root -passout pass:root
+```
 
 ### Troubleshooting
 

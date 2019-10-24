@@ -12,6 +12,7 @@ Napi::Object ZCrypto::Init(Napi::Env env, Napi::Object exports) {
     InstanceMethod("createKDB", &ZCrypto::CreateKDB),
     InstanceMethod("openKeyRing", &ZCrypto::OpenKeyRing),
     InstanceMethod("importKey", &ZCrypto::ImportKey),
+    InstanceMethod("getErrorString", &ZCrypto::GetErrorString),
   });
 
   constructor = Napi::Persistent(func);
@@ -73,10 +74,24 @@ Napi::Value ZCrypto::OpenKeyRing(const Napi::CallbackInfo &info) {
   return Napi::Number::New(env, openKeyRing_impl(ring_name, &(this->handle)));
 }
 
+Napi::Value ZCrypto::GetErrorString(const Napi::CallbackInfo &info) {
+  Napi::Env env = info.Env();
+  if (info.Length() < 1) {
+    Napi::Error::New(env, "GetErrorString needs 1 arguments "
+                          "error")
+        .ThrowAsJavaScriptException();
+    return Napi::Number::New(env, -1);
+  }
+
+  int error = info[0].As<Napi::Number>();
+
+  return Napi::String::New(env, errorString_impl(error));
+}
+
 Napi::Value ZCrypto::OpenKDB(const Napi::CallbackInfo &info) {
   Napi::Env env = info.Env();
   if (info.Length() < 2) {
-    Napi::Error::New(env, "OpenKDB needs 1 arguments "
+    Napi::Error::New(env, "OpenKDB needs 2 arguments "
                           "database, passphrase")
         .ThrowAsJavaScriptException();
     return Napi::Number::New(env, -1);

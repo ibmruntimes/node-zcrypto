@@ -17,11 +17,13 @@ crypt.createKDB("my.kdb", "password", 10024, 0);
 crypt.openKDB("my.kdb", "password");
 
 // Racf Keyring
-//crypt.openKeyRing("ITODORO");
+var rc = crypt.openKeyRing("ITODOR");
+console.log(crypt.getErrorString(rc));
 
 // Import a P12 file as Cert.p12 using password and label
 // Update only allowed for KDB
-crypt.importKey("Cert.p12", "root", "MYCERT3");
+rc = crypt.importKey("Cert.p12", "root", "MYCERT3");
+console.log(crypt.getErrorString(rc));
 
 // Export to P12 using password and label
 crypt.exportKeyToFile("Cert.p12.nodedup", "root", "MYCERT3");
