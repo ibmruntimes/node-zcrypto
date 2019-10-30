@@ -35,9 +35,9 @@ extern "C" int openKDB_impl( const char* filename, const char* password, gsk_han
 }
 
 extern "C" char* errorString_impl( int error ) {
-    __ae_thread_swapmode(__AE_EBCDIC_MODE);
+    int orig = __ae_thread_swapmode(__AE_EBCDIC_MODE);
 	const char* errorStr_e  = gsk_strerror( error );
-    __ae_thread_swapmode(__AE_ASCII_MODE);
+    __ae_thread_swapmode(orig);
 	char * errorStr_a = (char*)malloc(strlen(errorStr_e) + 1);
 	memcpy(errorStr_a, errorStr_e, strlen(errorStr_e) + 1);
 	__e2a_l(errorStr_a, strlen(errorStr_a) + 1);
