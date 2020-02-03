@@ -25,7 +25,7 @@ npm install zcrypto
 ```
 
 ### Using zcrypto with RACF Keyrings
-This assumes that a RACF Keyring was created with a private/public certificate.
+This assumes that a RACF Keyring was created and connected to a RACF private/public certificate and certificate authority.
 
 ```js
 const zcrypto = require('zcrypto');
@@ -33,13 +33,13 @@ const zcrypto = require('zcrypto');
 // Create an object of a zcrypto
 var crypt = new zcrypto.ZCrypto();
 
-// Open RACF Keyring labelled CERT1
+// Open RACF Keyring labelled MYRING1
 crypt.openKeyRing("MYRING1");
 
-// Export from RACF certificate label to PEM 
+// Export RACF certificate labeled "ServerCert" to PEM format
 var pem = zcrypto.exportLabelToPEM(crypt, "ServerCert");
 
-// Launch a HTTPS web server
+// Launch a HTTPS web server with private key and certificate authority
 const https = require('https'); 
 
 // Configuration for the HTTPS web server.
@@ -63,10 +63,10 @@ const zcrypto = require('zcrypto');
 // Create an object of a zcrypto
 var crypt = new zcrypto.ZCrypto();
 
-// Create a KDB file with a password, length and expiry time
+// Example: Create a KDB file with a password, length and expiry time
 crypt.createKDB("my.kdb", "root", 10024, 0);
 
-// Open kdb file if it exists
+// Example: Open kdb file if it exists
 crypt.openKDB("my.kdb", "root");
 
 // Import a P12 file as Cert.p12 using password and label
