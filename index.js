@@ -36,18 +36,17 @@ function ConvertP12ToPEM(string, passphrase) {
     };
 }
 
-function ConvertP12LabelToPEM(obj, label, passphrase) {
+function exportLabelToPEM(obj, label, passphrase = "root") {
 	var p12File = obj.exportKeyToBuffer(passphrase, label);
-	console.log(p12File);
 	return ConvertP12ToPEM(ArrayToString(p12File), passphrase);
 }
 
-function ConvertP12FileToPEM(file, passphrase) {
+function exportP12FileToPEM(file, passphrase = "root") {
     var p12File = fs.readFileSync(file, "binary");
 	return ConvertP12ToPEM(p12File, passphrase);
 }
 
-zcrypto.ConvertP12LabelToPEM = ConvertP12LabelToPEM;
-zcrypto.ConvertP12FileToPEM = ConvertP12FileToPEM;
+zcrypto.exportLabelToPEM = exportLabelToPEM;
+zcrypto.exportP12FileToPEM = exportP12FileToPEM;
 
 module.exports = zcrypto;
