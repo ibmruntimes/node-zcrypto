@@ -1,10 +1,10 @@
 # zcrypto
-This NodeJS module provides APIs to RACF keyrings and KDB (key databases) in z/OS.
+The zcrypto NodeJS module provides APIs to RACF key rings and KDB (key databases) in z/OS.
 
 ## Background
 
-This module leverages the Certificate Management Services (CMS) API.
-These APIs can be used to create/manage your own key database files,
+This module leverages the [Certificate Management Services (CMS)](https://www.ibm.com/support/knowledgecenter/en/SSLTBW_2.4.0/com.ibm.zos.v2r4.gska100/sssl2cms1000455.htm) API.
+The APIs in this module can be used to create/manage your own key database files,
 and extract certificates stored in the key database file or RACF key ring.
 
 ## Installation
@@ -106,7 +106,7 @@ Modify and submit job cert.jcl:
 
 ### How to generate a pkcs12 for import into KDB
 ```bash
-// Must be performed on a non-z/OS machine and then transferred to z/OS as binary
+# Must be performed on a non-z/OS machine and then transferred to z/OS as binary
 openssl genrsa -out privatekey.pem 1024 openssl req -new -key privatekey.pem -out certrequest.csr
 openssl x509 -req -in certrequest.csr -signkey privatekey.pem -out certificate.pem
 openssl pkcs12 -export -out Cert.p12 -in certificate.pem -inkey privatekey.pem -passin pass:password -passout pass:password
