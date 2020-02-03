@@ -99,7 +99,7 @@ https.createServer(options, (req, res) => {
 See [examples](/examples) 
 
 ### How to generate a RACF private/public certificate and RACF keyring
-Ensure that your z/OS Userid has CONTROL access to RACF facility classes IRR.DIGTCERT.GENCERT, IRR.DIGTCERT.CERTAUTH, and IRR.DIGTCERT.ADD
+Ensure that your z/OS Userid has CONTROL access to RACF facility classes `IRR.DIGTCERT.GENCERT`, `IRR.DIGTCERT.CERTAUTH`, and `IRR.DIGTCERT.ADD`
 
 Modify and submit job cert.jcl:
 `submit cert.jcl`
