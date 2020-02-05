@@ -107,7 +107,8 @@ Modify and submit job cert.jcl:
 ### How to generate a pkcs12 for import into KDB
 ```bash
 # Must be performed on a non-z/OS machine and then transferred to z/OS as binary
-openssl genrsa -out privatekey.pem 1024 openssl req -new -key privatekey.pem -out certrequest.csr
+openssl genrsa -out privatekey.pem 1024 
+openssl req -new -key privatekey.pem -out certrequest.csr
 openssl x509 -req -in certrequest.csr -signkey privatekey.pem -out certificate.pem
 openssl pkcs12 -export -out Cert.p12 -in certificate.pem -inkey privatekey.pem -passin pass:password -passout pass:password
 ```

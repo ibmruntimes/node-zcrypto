@@ -37,18 +37,18 @@ Napi::Value ZCrypto::CreateKDB(const Napi::CallbackInfo &info) {
         .ThrowAsJavaScriptException();
     return Napi::Number::New(env, -1);
   }
- /* if (!info[2].IsNumber()) {
+  if (!info[2].IsNumber()) {
     Napi::TypeError::New(env, "length should be a number")
         .ThrowAsJavaScriptException();
     return Napi::Number::New(env, -1);
-  }*/
+  }
   int length = info[2].As<Napi::Number>();
 
-  /*if (!info[3].IsNumber()) {
+  if (!info[3].IsNumber()) {
     Napi::TypeError::New(env, "expiration should be a number")
         .ThrowAsJavaScriptException();
     return Napi::Number::New(env, -1);
-  }*/
+  }
   int time = info[3].As<Napi::Number>();
 
   const char *filename =
@@ -164,26 +164,8 @@ Napi::Value ZCrypto::ExportKeyToBuffer(const Napi::CallbackInfo &info) {
 
   char* bufferptr = nullptr;
 
-/*
-  napi_value theBuffer;
-  napi_status status;
-  status = napi_create_arraybuffer(
-                env,
-                stream.length,
-                (void**)(&bufferptr),
-                &theBuffer);
-  if(status != napi_ok) {
-    napi_throw_type_error(env, "EBADAPI", "napi_create_buffer");
-    return  Napi::Number::New(env, 1);
-  }
-*/
   Napi::ArrayBuffer arrayBuffer = Napi::ArrayBuffer::New(env, (void*)(stream.data), stream.length);
-  //memcpy(bufferptr, stream.data, stream.length);
-    //napi_value typed_array_value;
-    //status = napi_create_typedarray(env, napi_uint8_array, stream.length,
-                                    // theBuffer, 0, &typed_array_value);
   return Napi::Uint8Array::New(env, stream.length, arrayBuffer, 0);
-  //return typed_array_value;
 }
 
 Napi::Object Init(Napi::Env env, Napi::Object exports) {

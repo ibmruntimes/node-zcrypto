@@ -11,7 +11,9 @@ if (fs.existsSync("Cert.p12.nodedup")) {
 var crypt = new zcrypto.ZCrypto();
 
 // Create a KDB file with a password, length and expiry time
-crypt.createKDB("my.kdb", "password", 10024, 0);
+var rc =crypt.createKDB("/tmp/mysdfasdfsdfas.kdb", "password", 10024, 0);
+console.log(rc)
+console.log(crypt.getErrorString(rc));
 
 // Open kdb file if it exists
 crypt.openKDB("my.kdb", "password");

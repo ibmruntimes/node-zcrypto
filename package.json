@@ -4,8 +4,8 @@
   "description": "A z/OS RACF keyring/kdb crypto npm for z/OS",
   "main": "index.js",
   "scripts": {
-    "build": "node-gyp rebuild",
-    "clean": "node-gyp clean"
+    "build": "node-gyp build",
+    "test": "./setup.sh && ./node_modules/.bin/mocha -b -t 40000 --reporter spec"
   },
   "keywords": [
     "zos",
@@ -13,7 +13,13 @@
   ],
   "dependencies": {
     "node-addon-api": "^1.6.3",
-    "node-forge": "^0.8.5"
+    "node-forge": "^0.8.5",
+    "tmp": "^0.1.0"
+  },
+  "devDependencies": {
+    "async": "^1.5.0",
+    "chai": "^4.1.2",
+    "mocha": "^4.1.0"
   },
   "author": "Igor Todorovski",
   "license": "ISC"

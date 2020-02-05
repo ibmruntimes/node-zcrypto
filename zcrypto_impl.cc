@@ -15,7 +15,13 @@ extern "C" int createKDB_impl( const char* filename, const char* password, int l
 	char * password_e = (char*)malloc(strlen(password) + 1);
 	memcpy(password_e, password, strlen(password) + 1);
 	__a2e_l(password_e, strlen(password_e) + 1);
+
+    int orig = __ae_thread_swapmode(__AE_EBCDIC_MODE);
 	int rc = gsk_create_database ( filename_e, password_e, gskdb_dbtype_key, length, expiration, handle);
+    __ae_thread_swapmode(orig);
+
+    free(filename_e);
+    free(password_e);
 	return rc;
 }
 
@@ -29,7 +35,13 @@ extern "C" int openKDB_impl( const char* filename, const char* password, gsk_han
 	__a2e_l(password_e, strlen(password_e) + 1);
     int num_records;
     gskdb_database_type type;
+
+    int orig = __ae_thread_swapmode(__AE_EBCDIC_MODE);
 	int rc = gsk_open_database( filename_e, password_e, 1, handle, &type, &num_records);
+    __ae_thread_swapmode(orig);
+
+    free(filename_e);
+    free(password_e);
 	return rc;
 }
 
