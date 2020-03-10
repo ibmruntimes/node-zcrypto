@@ -36,8 +36,11 @@ var crypt = new zcrypto.ZCrypto();
 // Open RACF Keyring labelled MYRING1
 crypt.openKeyRing("MYRING1");
 
-// Export RACF certificate labeled "ServerCert" to PEM format
-var pem = zcrypto.exportLabelToPEM(crypt, "ServerCert");
+// Export RACF private/public keys labeled "ServerCert" to PEM format
+var pem = zcrypto.exportKeysToPEM(crypt, "ServerCert");
+
+// Export RACF ca certificate labeled "CaCert" to PEM format
+var cacert = zcrypto.exportCertToPEM(crypt, "CaCert");
 
 // Launch a HTTPS web server with private key and certificate authority
 const https = require('https'); 

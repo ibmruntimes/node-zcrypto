@@ -7,6 +7,7 @@ Napi::Object ZCrypto::Init(Napi::Env env, Napi::Object exports) {
 
   Napi::Function func = DefineClass(env, "ZCrypto", {
     InstanceMethod("exportKeyToBuffer", &ZCrypto::ExportKeyToBuffer),
+    InstanceMethod("exportCertToBuffer", &ZCrypto::ExportCertToBuffer),
     InstanceMethod("exportKeyToFile", &ZCrypto::ExportKeyToFile),
     InstanceMethod("openKDB", &ZCrypto::OpenKDB),
     InstanceMethod("createKDB", &ZCrypto::CreateKDB),
@@ -158,6 +159,30 @@ Napi::Value ZCrypto::ExportKeyToBuffer(const Napi::CallbackInfo &info) {
 
   gsk_buffer stream = {0, 0};
   int rc = exportKeyToBuffer_impl(password, label, &stream, &(this->handle));
+
+  if (rc != 0)
+    return Napi::Number::New(env, rc);
+
+  char* bufferptr = nullptr;
+
+  Napi::ArrayBuffer arrayBuffer = Napi::ArrayBuffer::New(env, (void*)(stream.data), stream.length);
+  return Napi::Uint8Array::New(env, stream.length, arrayBuffer, 0);
+}
+
+Napi::Value ZCrypto::ExportCertToBuffer(const Napi::CallbackInfo &info) {
+  Napi::Env env = info.Env();
+  if (info.Length() < 1) {
+    Napi::Error::New(env, "ExportCertToBuffer needs 1 arguments "
+                          "password, label")
+        .ThrowAsJavaScriptException();
+    return Napi::Number::New(env, -1);
+  }
+
+  const char *label =
+      static_cast<std::string>(info[0].As<Napi::String>()).c_str();
+
+  gsk_buffer stream = {0, 0};
+  int rc = exportCertToBuffer_impl(label, &stream, &(this->handle));
 
   if (rc != 0)
     return Napi::Number::New(env, rc);

@@ -12,6 +12,7 @@ extern "C" int createKDB_impl( const char* filename, const char* password, int l
 extern "C" int importKey_impl(const char* filename, const char* password, const char* label, gsk_handle* handle);
 extern "C" int exportKeyToFile_impl(const char* filename, const char* password, const char* label, gsk_handle* handle);
 extern "C" int exportKeyToBuffer_impl(const char* password, const char* label, gsk_buffer* stream, gsk_handle* handle);
+extern "C" int exportCertToBuffer_impl(const char* label, gsk_buffer* stream, gsk_handle* handle);
 extern "C" int openKDB_impl( const char* filename, const char* password, gsk_handle* handle);
 extern "C" int openKeyRing_impl( const char* ring_name, gsk_handle* handle);
 extern "C" char* errorString_impl( int error );
@@ -31,6 +32,7 @@ class ZCrypto : public Napi::ObjectWrap<ZCrypto> {
   Napi::Value GetErrorString(const Napi::CallbackInfo &info);
   Napi::Value ExportKeyToFile(const Napi::CallbackInfo &info);
   Napi::Value ExportKeyToBuffer(const Napi::CallbackInfo &info);
+  Napi::Value ExportCertToBuffer(const Napi::CallbackInfo &info);
 
   bool initialized;
   gsk_handle handle;

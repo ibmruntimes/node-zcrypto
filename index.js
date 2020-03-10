@@ -2,6 +2,7 @@ var forge = require("node-forge");
 const fs = require('fs')
 const zcrypto = require('./build/Release/zcrypto.node');
 
+// Helper functions
 function ArrayToString(array) {
     var out, i, len, c;
     out = "";
@@ -14,6 +15,13 @@ function ArrayToString(array) {
 
     return out;
 }
+
+function derToPem(der) {
+    var asnObj = forge.asn1.fromDer(der);
+    var asn1Cert = forge.pki.certificateFromAsn1(asnObj);
+    return forge.pki.certificateToPem(asn1Cert);
+};
+
 
 function ConvertP12ToPEM(string, passphrase) {
 	var asn = forge.asn1.fromDer(string, false)
@@ -41,12 +49,20 @@ function exportLabelToPEM(obj, label, passphrase = "root") {
 	return ConvertP12ToPEM(ArrayToString(p12File), passphrase);
 }
 
+function exportCertLabelToPEM(obj, label) {
+	var p12File = obj.exportCertToBuffer(label);
+	return derToPem(ArrayToString(p12File));
+}
+
 function exportP12FileToPEM(file, passphrase = "root") {
     var p12File = fs.readFileSync(file, "binary");
 	return ConvertP12ToPEM(p12File, passphrase);
 }
 
+// Exposed API
 zcrypto.exportLabelToPEM = exportLabelToPEM;
+zcrypto.exportKeysToPEM = exportLabelToPEM;
+zcrypto.exportCertLabelToPEM = exportCertLabelToPEM;
 zcrypto.exportP12FileToPEM = exportP12FileToPEM;
 
 module.exports = zcrypto;
