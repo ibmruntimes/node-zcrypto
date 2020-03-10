@@ -12,7 +12,7 @@ function readKeysFromRACFKeyring() {
         return;
     }
 
-    var pem = zcrypto.exportCertLabelToPEM(crypt, "TCACert");
+    var pem = zcrypto.exportCertToPEM(crypt, "TCACert");
     return pem;
 }
 

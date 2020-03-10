@@ -49,7 +49,7 @@ function exportLabelToPEM(obj, label, passphrase = "root") {
 	return ConvertP12ToPEM(ArrayToString(p12File), passphrase);
 }
 
-function exportCertLabelToPEM(obj, label) {
+function exportCertToPEM(obj, label) {
 	var p12File = obj.exportCertToBuffer(label);
 	return derToPem(ArrayToString(p12File));
 }
@@ -62,7 +62,7 @@ function exportP12FileToPEM(file, passphrase = "root") {
 // Exposed API
 zcrypto.exportLabelToPEM = exportLabelToPEM;
 zcrypto.exportKeysToPEM = exportLabelToPEM;
-zcrypto.exportCertLabelToPEM = exportCertLabelToPEM;
+zcrypto.exportCertToPEM = exportCertToPEM;
 zcrypto.exportP12FileToPEM = exportP12FileToPEM;
 
 module.exports = zcrypto;
