@@ -23,7 +23,7 @@ function derToPem(der) {
 };
 
 
-function ConvertP12ToPEM(string, passphrase) {
+function ConvertP12ToPKCS1(string, passphrase) {
 	var asn = forge.asn1.fromDer(string, false)
 	var p12 = forge.pkcs12.pkcs12FromAsn1(asn, false, passphrase);
 	var bags = p12.getBags({bagType: forge.pki.oids.certBag});
@@ -44,9 +44,42 @@ function ConvertP12ToPEM(string, passphrase) {
     };
 }
 
-function exportLabelToPEM(obj, label, passphrase = "root") {
+function ConvertP12ToPKCS8(string, passphrase) {
+	var asn = forge.asn1.fromDer(string, false)
+	var p12 = forge.pkcs12.pkcs12FromAsn1(asn, false, passphrase);
+	var bags = p12.getBags({bagType: forge.pki.oids.certBag});
+
+	var bag = bags[forge.pki.oids.certBag][0];
+
+	var keyData = p12.getBags({ bagType: forge.pki.oids.pkcs8ShroudedKeyBag })[forge.pki.oids.pkcs8ShroudedKeyBag]
+			.concat(p12.getBags({ bagType: forge.pki.oids.keyBag })[forge.pki.oids.keyBag]);
+	var certBags = p12.getBags({ bagType: forge.pki.oids.certBag })[forge.pki.oids.certBag];
+
+	var certificate = forge.pki.certificateToPem(certBags[0].cert);
+
+    // convert a Forge private key to an ASN.1 RSAPrivateKey
+    const rsaPrivateKey = forge.pki.privateKeyToAsn1(keyData[0].key);
+
+    // wrap an RSAPrivateKey ASN.1 object in a PKCS#8 ASN.1 PrivateKeyInfo
+    const privateKeyInfo = forge.pki.wrapRsaPrivateKey(rsaPrivateKey);
+
+    // convert a PKCS#8 ASN.1 PrivateKeyInfo to PEM
+	var key = keyData.length ? forge.pki.privateKeyInfoToPem(privateKeyInfo) : undefined;
+
+	return {
+        key: key,
+        cert: certificate,
+    };
+}
+
+function exportKeysToPKCS8(obj, label, passphrase = "root") {
 	var p12File = obj.exportKeyToBuffer(passphrase, label);
-	return ConvertP12ToPEM(ArrayToString(p12File), passphrase);
+	return ConvertP12ToPKCS8(ArrayToString(p12File), passphrase);
+}
+
+function exportKeysToPKCS1(obj, label, passphrase = "root") {
+	var p12File = obj.exportKeyToBuffer(passphrase, label);
+	return ConvertP12ToPKCS1(ArrayToString(p12File), passphrase);
 }
 
 function exportCertToPEM(obj, label) {
@@ -60,8 +93,11 @@ function exportP12FileToPEM(file, passphrase = "root") {
 }
 
 // Exposed API
-zcrypto.exportLabelToPEM = exportLabelToPEM;
-zcrypto.exportKeysToPEM = exportLabelToPEM;
+zcrypto.exportKeysToPKCS8 = exportKeysToPKCS8;
+zcrypto.exportKeysToPKCS1 = exportKeysToPKCS1;
+zcrypto.exportCertToPEM = exportCertToPEM;
+zcrypto.exportLabelToPEM = exportKeysToPKCS1;
+zcrypto.exportKeysToPEM = exportKeysToPKCS1;
 zcrypto.exportCertToPEM = exportCertToPEM;
 zcrypto.exportP12FileToPEM = exportP12FileToPEM;
 

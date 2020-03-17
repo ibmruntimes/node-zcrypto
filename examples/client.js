@@ -6,13 +6,13 @@ var crypt;
 function readKeysFromRACFKeyring() {
     crypt = new zcrypto.ZCrypto();
     // Racf Keyring
-    var rc = crypt.openKeyRing("TMYRING");
+    var rc = crypt.openKeyRing("TMYRING1");
     if (rc) {
         console.log(crypt.getErrorString(rc));
         return;
     }
 
-    var pem = zcrypto.exportCertToPEM(crypt, "TCACert");
+    var pem = zcrypto.exportCertToPEM(crypt, "TCACert1");
     return pem;
 }
 
@@ -23,7 +23,7 @@ var pem = readKeysFromRACFKeyring();
 const https = require('https'); // HTTPS web server.
 
 var options = { 
-    hostname: 'hostname', 
+    hostname: 'hostname',
     port: 3000, 
     path: '/', 
     method: 'GET',

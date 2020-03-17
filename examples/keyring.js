@@ -4,13 +4,13 @@ const fs = require('fs')
 function readKeysFromRACFKeyring() {
     var crypt = new zcrypto.ZCrypto();
     // Racf Keyring
-    var rc = crypt.openKeyRing("MYRING1");
+    var rc = crypt.openKeyRing("TMYRING1");
     if (rc) {
         console.log(crypt.getErrorString(rc));
         return;
     }
 
-    var pem = zcrypto.exportLabelToPEM(crypt, "ServerCert");
+    var pem = zcrypto.exportKeysToPKCS8(crypt, "TServerCert1");
     return pem;
 }
 

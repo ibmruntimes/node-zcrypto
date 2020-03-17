@@ -29,6 +29,7 @@ describe("zcrypto validation", function() {
     // Import a P12 file as Cert.p12 using password and label
     // Update only allowed for KDB
     rc = crypt.importKey("Cert.p12", "password", "MYCERT3");
+    console.log(crypt.getErrorString(rc));
     expect(rc == 0).to.be.true;
 
     // Export to P12 using password and label
