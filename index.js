@@ -38,9 +38,15 @@ function ConvertP12ToPKCS1(string, passphrase) {
 
 	var key = keyData.length ? forge.pki.privateKeyToPem(keyData[0].key) : undefined;
 
+    const rsaPrivateKey = forge.pki.privateKeyToAsn1(keyData[0].key);
+
+    var forgePublicKey = forge.pki.rsa.setPublicKey(keyData[0].key.n, keyData[0].key.e);
+    var publickey = forge.pki.publicKeyToPem(forgePublicKey);
+
 	return {
         key: key,
         cert: certificate,
+        publickey: publickey
     };
 }
 
@@ -66,15 +72,25 @@ function ConvertP12ToPKCS8(string, passphrase) {
     // convert a PKCS#8 ASN.1 PrivateKeyInfo to PEM
 	var key = keyData.length ? forge.pki.privateKeyInfoToPem(privateKeyInfo) : undefined;
 
+    var forgePublicKey = forge.pki.rsa.setPublicKey(keyData[0].key.n, keyData[0].key.e);
+    var publickey = forge.pki.publicKeyToPem(forgePublicKey);
+
 	return {
         key: key,
         cert: certificate,
+        publickey: publickey
     };
 }
+
 
 function exportKeysToPKCS8(obj, label, passphrase = "root") {
 	var p12File = obj.exportKeyToBuffer(passphrase, label);
 	return ConvertP12ToPKCS8(ArrayToString(p12File), passphrase);
+}
+
+function exportPublicKey(obj, label, passphrase = "root") {
+	var p12File = obj.exportKeyToBuffer(passphrase, label);
+	return ConvertP12ToPublicKey(ArrayToString(p12File), passphrase);
 }
 
 function exportKeysToPKCS1(obj, label, passphrase = "root") {

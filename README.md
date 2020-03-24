@@ -42,7 +42,7 @@ var pem = zcrypto.exportKeysToPKCS1(crypt, "ServerCert");
 // Or export RACF private/public keys labeled "ServerCert" to PKCS8 format
 pem = zcrypto.exportKeysToPKCS8(crypt, "ServerCert");
 
-// pem object contains pem.key and pem.cert
+// pem object contains pem.key, pem.cert and pem.publickey
 
 // Export RACF ca certificate labeled "CaCert" to PEM format
 var cacert = zcrypto.exportCertToPEM(crypt, "CaCert");
