@@ -1,16 +1,13 @@
 {
   "name": "zcrypto",
-  "version": "1.0.8",
+  "version": "1.0.9",
   "description": "A z/OS RACF keyring/kdb crypto npm for z/OS",
   "main": "index.js",
   "scripts": {
     "build": "node-gyp build",
     "test": "./setup.sh && ./node_modules/.bin/mocha -b -t 40000 --reporter spec"
   },
-  "repository": {
-    "type": "git",
-    "url": "https://github.com/ibmruntimes/node-zcrypto.git"
-  },
+  "repository": "ibmruntimes/node-zcrypto",
   "keywords": [
     "zos",
     "crypto"
