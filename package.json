@@ -14,7 +14,7 @@
   ],
   "dependencies": {
     "node-addon-api": "^1.6.3",
-    "node-forge": "^0.8.5",
+    "node-forge": "^0.10.0",
     "tmp": "^0.1.0"
   },
   "devDependencies": {
