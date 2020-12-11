@@ -105,8 +105,13 @@ function exportKeysToPKCS1(obj, label, passphrase = "root") {
 }
 
 function exportCertToPEM(obj, label) {
-	var p12File = obj.exportCertToBuffer(label);
-	return derToPem(ArrayToString(p12File));
+	var stream = obj.exportCertToBuffer(label);
+  if (typeof stream == "number" && stream != 0) {
+    console.log("Error: " + obj.getErrorString(stream));
+    return stream;
+  }
+
+	return derToPem(ArrayToString(stream));
 }
 
 function exportP12FileToPEM(file, passphrase = "root") {
