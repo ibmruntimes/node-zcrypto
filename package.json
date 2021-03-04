@@ -1,6 +1,6 @@
 {
   "name": "zcrypto",
-  "version": "1.3.0",
+  "version": "1.3.1",
   "description": "A z/OS RACF keyring/kdb crypto npm for z/OS",
   "main": "index.js",
   "scripts": {
@@ -14,13 +14,13 @@
   ],
   "dependencies": {
     "node-addon-api": "^1.6.3",
-    "node-forge": "^0.8.5",
+    "node-forge": "^0.10.0",
     "tmp": "^0.1.0"
   },
   "devDependencies": {
     "async": "^1.5.0",
     "chai": "^4.1.2",
-    "mocha": "^4.1.0"
+    "mocha": "^8.3.0"
   },
   "author": "Igor Todorovski",
   "license": "Apache-2.0"
