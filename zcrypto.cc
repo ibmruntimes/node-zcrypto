@@ -58,13 +58,18 @@ Napi::Value ZCrypto::CreateKDB(const Napi::CallbackInfo &info) {
   }
   int time = info[3].As<Napi::Number>();
 
-  const char *filename =
-      static_cast<std::string>(info[0].As<Napi::String>()).c_str();
-  const char *password =
-      static_cast<std::string>(info[1].As<Napi::String>()).c_str();
+  std::string filename = static_cast<std::string>(info[0].As<Napi::String>());
+  std::string password = static_cast<std::string>(info[1].As<Napi::String>());
 
-  return Napi::Number::New(env, createKDB_impl(filename, password, 
-                          length, time, &(this->handle)));
+  int rc = createKDB_impl(
+    filename.c_str(),
+    password.c_str(),
+    length,
+    time,
+    &(this->handle)
+  );
+
+  return Napi::Number::New(env, rc);
 }
 
 Napi::Value ZCrypto::OpenKeyRing(const Napi::CallbackInfo &info) {
@@ -75,10 +80,11 @@ Napi::Value ZCrypto::OpenKeyRing(const Napi::CallbackInfo &info) {
         .ThrowAsJavaScriptException();
     return Napi::Number::New(env, -1);
   }
-  const char *ring_name =
-      static_cast<std::string>(info[0].As<Napi::String>()).c_str();
+  std::string ring_name = static_cast<std::string>(info[0].As<Napi::String>());
 
-  return Napi::Number::New(env, openKeyRing_impl(ring_name, &(this->handle)));
+  int rc = openKeyRing_impl(ring_name.c_str(), &(this->handle));
+
+  return Napi::Number::New(env, rc);
 }
 
 Napi::Value ZCrypto::GetErrorString(const Napi::CallbackInfo &info) {
@@ -103,12 +109,12 @@ Napi::Value ZCrypto::OpenKDB(const Napi::CallbackInfo &info) {
         .ThrowAsJavaScriptException();
     return Napi::Number::New(env, -1);
   }
-  const char *database =
-      static_cast<std::string>(info[0].As<Napi::String>()).c_str();
-  const char *passphrase =
-      static_cast<std::string>(info[1].As<Napi::String>()).c_str();
+  std::string database = static_cast<std::string>(info[0].As<Napi::String>());
+  std::string passphrase = static_cast<std::string>(info[1].As<Napi::String>());
 
-  return Napi::Number::New(env, openKDB_impl(database, passphrase, &(this->handle)));
+  int rc = openKDB_impl(database.c_str(), passphrase.c_str(), &(this->handle));
+
+  return Napi::Number::New(env, rc);
 }
 
 Napi::Value ZCrypto::ImportKey(const Napi::CallbackInfo &info) {
@@ -120,14 +126,18 @@ Napi::Value ZCrypto::ImportKey(const Napi::CallbackInfo &info) {
     return Napi::Number::New(env, -1);
   }
 
-  const char *filename =
-      static_cast<std::string>(info[0].As<Napi::String>()).c_str();
-  const char *password =
-      static_cast<std::string>(info[1].As<Napi::String>()).c_str();
-  const char *label =
-      static_cast<std::string>(info[2].As<Napi::String>()).c_str();
+  std::string filename = static_cast<std::string>(info[0].As<Napi::String>());
+  std::string password = static_cast<std::string>(info[1].As<Napi::String>());
+  std::string label = static_cast<std::string>(info[2].As<Napi::String>());
 
-  return Napi::Number::New(env, importKey_impl(filename, password, label, &(this->handle)));
+  int rc = importKey_impl(
+    filename.c_str(),
+    password.c_str(),
+    label.c_str(),
+    &(this->handle)
+  );
+
+  return Napi::Number::New(env, rc);
 }
 
 Napi::Value ZCrypto::ExportKeyToFile(const Napi::CallbackInfo &info) {
@@ -139,14 +149,18 @@ Napi::Value ZCrypto::ExportKeyToFile(const Napi::CallbackInfo &info) {
     return Napi::Number::New(env, -1);
   }
 
-  const char *filename =
-      static_cast<std::string>(info[0].As<Napi::String>()).c_str();
-  const char *password =
-      static_cast<std::string>(info[1].As<Napi::String>()).c_str();
-  const char *label =
-      static_cast<std::string>(info[2].As<Napi::String>()).c_str();
+  std::string filename = static_cast<std::string>(info[0].As<Napi::String>());
+  std::string password = static_cast<std::string>(info[1].As<Napi::String>());
+  std::string label = static_cast<std::string>(info[2].As<Napi::String>());
 
-  return Napi::Number::New(env, exportKeyToFile_impl(filename, password, label, &(this->handle)));
+  int rc = exportKeyToFile_impl(
+    filename.c_str(),
+    password.c_str(),
+    label.c_str(),
+    &(this->handle)
+  );
+
+  return Napi::Number::New(env, rc);
 }
 
 Napi::Value ZCrypto::ExportKeyToBuffer(const Napi::CallbackInfo &info) {
@@ -158,13 +172,16 @@ Napi::Value ZCrypto::ExportKeyToBuffer(const Napi::CallbackInfo &info) {
     return Napi::Number::New(env, -1);
   }
 
-  const char *password =
-      static_cast<std::string>(info[0].As<Napi::String>()).c_str();
-  const char *label =
-      static_cast<std::string>(info[1].As<Napi::String>()).c_str();
+  std::string password = static_cast<std::string>(info[0].As<Napi::String>());
+  std::string label = static_cast<std::string>(info[1].As<Napi::String>());
 
   gsk_buffer stream = {0, 0};
-  int rc = exportKeyToBuffer_impl(password, label, &stream, &(this->handle));
+  int rc = exportKeyToBuffer_impl(
+    password.c_str(),
+    label.c_str(),
+    &stream,
+    &(this->handle)
+  );
 
   if (rc != 0)
     return Napi::Number::New(env, rc);
@@ -184,11 +201,10 @@ Napi::Value ZCrypto::ExportCertToBuffer(const Napi::CallbackInfo &info) {
     return Napi::Number::New(env, -1);
   }
 
-  const char *label =
-      static_cast<std::string>(info[0].As<Napi::String>()).c_str();
+  std::string label = static_cast<std::string>(info[0].As<Napi::String>());
 
   gsk_buffer stream = {0, 0};
-  int rc = exportCertToBuffer_impl(label, &stream, &(this->handle));
+  int rc = exportCertToBuffer_impl(label.c_str(), &stream, &(this->handle));
 
   if (rc != 0)
     return Napi::Number::New(env, rc);
