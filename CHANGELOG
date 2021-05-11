@@ -1,0 +1,6 @@
+2021-05-11, Version 1.3.2
+
+* fix ub caused by c_str() on temporary std::string
+
+  Resolves a bug where the openKeyRing() function would fail if passed a keyring
+  name that is longer than 21 characters.
