@@ -74,5 +74,4 @@ describe("zcrypto validation", function() {
     expect(rc).to.equal(53817353);
     done();
   });
-
 });
