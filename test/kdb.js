@@ -69,7 +69,7 @@ describe("zcrypto validation", function() {
 
   it('returns correct rc for keyring that does not exist', function(done) {
     var crypt = new zcrypto.ZCrypto();
-    var rc = crypt.openKeyRing("THIS/KEYRING.DOES.NOT.EXIST");
+    var rc = crypt.openKeyRing("KEYRING.DOES.NOT.EXIST");
     // rc for CMSERR_FILE_NOT_FOUND "File or keyring not found".
     expect(rc).to.equal(53817353);
     done();
