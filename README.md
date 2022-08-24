@@ -14,7 +14,7 @@ This is a [Node.js](https://nodejs.org/en/) module available through the
 [npm registry](https://www.npmjs.com/).
 -->
 
-Node.js 8.16.0 for z/OS or higher is required.
+Node.js v14.0 for z/OS or higher is required.
 
 ## Simple to use
 
