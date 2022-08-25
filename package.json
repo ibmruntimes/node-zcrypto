@@ -10,7 +10,9 @@
   "repository": "ibmruntimes/node-zcrypto",
   "keywords": [
     "zos",
-    "crypto"
+    "crypto",
+    "keyring",
+    "RACF"
   ],
   "dependencies": {
     "node-addon-api": "^1.6.3",

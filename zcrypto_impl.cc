@@ -5,13 +5,12 @@
  */
 
 #include "zcrypto.h"
-#include <unistd.h>
-#include <sys/stat.h>
 #include <_Nascii.h>
+#include <sys/stat.h>
+#include <unistd.h>
 
 
 extern "C" int __chgfdccsid(int fd, unsigned short ccsid);
-
 
 extern "C" int createKDB_impl( const char* filename, const char* password, int length, int expiration, gsk_handle* handle) {
     std::string str; 

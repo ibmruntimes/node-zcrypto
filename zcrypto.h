@@ -7,11 +7,11 @@
 #ifndef __ZCRYPTO_H_
 #define __ZCRYPTO_H_ 1
 
-#include <stdio.h>
-#include <stdlib.h>
 #include <gskcms.h>
 #include <gskssl.h>
 #include <napi.h>
+#include <stdio.h>
+#include <stdlib.h>
 #include <string>
 
 extern "C" int createKDB_impl( const char* filename, const char* password, int length, int expiration, gsk_handle* handle);

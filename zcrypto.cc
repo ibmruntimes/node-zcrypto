@@ -186,8 +186,6 @@ Napi::Value ZCrypto::ExportKeyToBuffer(const Napi::CallbackInfo &info) {
   if (rc != 0)
     return Napi::Number::New(env, rc);
 
-  char* bufferptr = nullptr;
-
   Napi::ArrayBuffer arrayBuffer = Napi::ArrayBuffer::New(env, (void*)(stream.data), stream.length);
   return Napi::Uint8Array::New(env, stream.length, arrayBuffer, 0);
 }
@@ -208,8 +206,6 @@ Napi::Value ZCrypto::ExportCertToBuffer(const Napi::CallbackInfo &info) {
 
   if (rc != 0)
     return Napi::Number::New(env, rc);
-
-  char* bufferptr = nullptr;
 
   Napi::ArrayBuffer arrayBuffer = Napi::ArrayBuffer::New(env, (void*)(stream.data), stream.length);
   return Napi::Uint8Array::New(env, stream.length, arrayBuffer, 0);
