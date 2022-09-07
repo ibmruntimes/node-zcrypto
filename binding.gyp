@@ -1,4 +1,7 @@
 {
+    "variables": {
+        "NODE_VERSION%":"<!(node -p \"process.versions.node.split(\\\".\\\")[0]\")"
+    },
     "targets": [{
         "target_name": "zcrypto",
         "include_dirs": [
@@ -11,6 +14,10 @@
                "zcrypto_impl.cc"
             ],
           }],
+          [ "NODE_VERSION < 18", {
+            "cflags": [  "-qascii" ],
+            "cflags_cc": [ "-qascii" ]
+          }],
         ],
 
         "libraries": ["/usr/lib/GSKCMS64.x", "/usr/lib/GSKSSL64.x"],
@@ -18,6 +25,6 @@
             "<!(node -p \"require('node-addon-api').gyp\")"
         ],
         "cflags": [  "-I/usr/lpp/gskssl/include" ],
-        "defines": [ "NAPI_DISABLE_CPP_EXCEPTIONS" ],
+        "defines": [ "NAPI_DISABLE_CPP_EXCEPTIONS", "_OPEN_SYS_FILE_EXT" ],
     }]
 }
