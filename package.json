@@ -1,6 +1,6 @@
 {
   "name": "zcrypto",
-  "version": "1.3.3",
+  "version": "1.3.4",
   "description": "A z/OS RACF keyring/kdb crypto npm for z/OS",
   "main": "index.js",
   "scripts": {
@@ -10,7 +10,9 @@
   "repository": "ibmruntimes/node-zcrypto",
   "keywords": [
     "zos",
-    "crypto"
+    "crypto",
+    "keyring",
+    "RACF"
   ],
   "dependencies": {
     "node-addon-api": "^1.6.3",

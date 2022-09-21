@@ -1,6 +1,6 @@
 /*
  * Licensed Materials - Property of IBM
- * (C) Copyright IBM Corp. 2020. All Rights Reserved.
+ * (C) Copyright IBM Corp. 2022. All Rights Reserved.
  * US Government Users Restricted Rights - Use, duplication or disclosure restricted by GSA ADP Schedule Contract with IBM Corp.
  */
 
@@ -186,8 +186,6 @@ Napi::Value ZCrypto::ExportKeyToBuffer(const Napi::CallbackInfo &info) {
   if (rc != 0)
     return Napi::Number::New(env, rc);
 
-  char* bufferptr = nullptr;
-
   Napi::ArrayBuffer arrayBuffer = Napi::ArrayBuffer::New(env, (void*)(stream.data), stream.length);
   return Napi::Uint8Array::New(env, stream.length, arrayBuffer, 0);
 }
@@ -208,8 +206,6 @@ Napi::Value ZCrypto::ExportCertToBuffer(const Napi::CallbackInfo &info) {
 
   if (rc != 0)
     return Napi::Number::New(env, rc);
-
-  char* bufferptr = nullptr;
 
   Napi::ArrayBuffer arrayBuffer = Napi::ArrayBuffer::New(env, (void*)(stream.data), stream.length);
   return Napi::Uint8Array::New(env, stream.length, arrayBuffer, 0);

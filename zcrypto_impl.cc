@@ -1,17 +1,16 @@
 /*
  * Licensed Materials - Property of IBM
- * (C) Copyright IBM Corp. 2020. All Rights Reserved.
+ * (C) Copyright IBM Corp. 2022. All Rights Reserved.
  * US Government Users Restricted Rights - Use, duplication or disclosure restricted by GSA ADP Schedule Contract with IBM Corp.
  */
 
 #include "zcrypto.h"
-#include <unistd.h>
-#include <sys/stat.h>
 #include <_Nascii.h>
+#include <sys/stat.h>
+#include <unistd.h>
 
 
 extern "C" int __chgfdccsid(int fd, unsigned short ccsid);
-
 
 extern "C" int createKDB_impl( const char* filename, const char* password, int length, int expiration, gsk_handle* handle) {
     std::string str; 

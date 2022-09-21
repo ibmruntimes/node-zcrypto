@@ -14,7 +14,7 @@ This is a [Node.js](https://nodejs.org/en/) module available through the
 [npm registry](https://www.npmjs.com/).
 -->
 
-Node.js 8.16.0 for z/OS or higher is required.
+IBM SDK for Node.js - z/OS 14.0 or IBM Open Enterprise SDK for Node.js 16 or higher is required.
 
 ## Simple to use
 
