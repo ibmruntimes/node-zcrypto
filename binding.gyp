@@ -14,9 +14,8 @@
                "zcrypto_impl.cc"
             ],
           }],
-          [ "NODE_VERSION < 18", {
-            "cflags": [  "-qascii" ],
-            "cflags_cc": [ "-qascii" ]
+          [ "NODE_VERSION < 16", {
+            "cflags": [  "-qascii" ]
           }],
         ],
 
