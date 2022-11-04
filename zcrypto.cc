@@ -34,6 +34,7 @@ ZCrypto::ZCrypto(const Napi::CallbackInfo& info) : Napi::ObjectWrap<ZCrypto>(inf
   Napi::HandleScope scope(env);
 
   this->initialized = 0; 
+  this->handle = nullptr;
 }
 
 Napi::Value ZCrypto::CreateKDB(const Napi::CallbackInfo &info) {
