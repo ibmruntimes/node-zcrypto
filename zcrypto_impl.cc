@@ -50,14 +50,13 @@ extern "C" int openKDB_impl( const char* filename, const char* password, gsk_han
 	return rc;
 }
 
-extern "C" char* errorString_impl( int error ) {
+extern "C" char* errorString_impl( int err, char *errstr, int errstrlen ) {
     int orig = __ae_thread_swapmode(__AE_EBCDIC_MODE);
-	const char* errorStr_e  = gsk_strerror( error );
+	const char* errstr_e  = gsk_strerror( err );
     __ae_thread_swapmode(orig);
-	char * errorStr_a = (char*)malloc(strlen(errorStr_e) + 1);
-	memcpy(errorStr_a, errorStr_e, strlen(errorStr_e) + 1);
-	__e2a_l(errorStr_a, strlen(errorStr_a) + 1);
-	return errorStr_a;
+	strncpy(errstr, errstr_e, errstrlen);
+	__e2a_l(errstr, errstrlen);
+	return errstr;
 }
 
 extern "C" int openKeyRing_impl( const char* ring_name, gsk_handle* handle) {
@@ -68,6 +67,7 @@ extern "C" int openKeyRing_impl( const char* ring_name, gsk_handle* handle) {
     int num_records;
     int orig = __ae_thread_swapmode(__AE_EBCDIC_MODE);
 	int rc = gsk_open_keyring( ring_name_e, handle, &num_records);
+    free(ring_name_e);
     __ae_thread_swapmode(orig);
 	return rc;
 }
@@ -85,6 +85,9 @@ extern "C" int exportKeyToFile_impl(const char* filename, const char* password, 
 
     int rc = gsk_export_key(*handle, label_e, gskdb_export_pkcs12v3_binary, x509_alg_pbeWithSha1And3DesCbc 
 , password_e,  &stream);
+
+    free(password_e);
+    free(label_e);
     if (rc !=0 ) { return rc; }
 
     FILE *fileptr;
@@ -105,6 +108,7 @@ extern "C" int exportCertToFile_impl(const char* filename, const char* label, gs
     __a2e_l(label_e, strlen(label_e) + 1);
 
     int rc = gsk_export_certificate(*handle, label_e, gskdb_export_der_binary, &stream);
+    free(label_e);
     if (rc !=0 ) { return rc; }
 
     FILE *fileptr;
@@ -123,6 +127,7 @@ extern "C" int exportCertToBuffer_impl(const char* label, gsk_buffer* stream, gs
     __a2e_l(label_e, strlen(label_e) + 1);
 
     int rc = gsk_export_certificate(*handle, label_e, gskdb_export_der_binary, stream);
+    free(label_e);
     return rc;
 }
 
@@ -137,6 +142,8 @@ extern "C" int exportKeyToBuffer_impl(const char* password, const char* label, g
 
     int rc = gsk_export_key(*handle, label_e, gskdb_export_pkcs12v3_binary, x509_alg_pbeWithSha1And3DesCbc 
 , password_e, stream);
+    free(password_e);
+    free(label_e);
     return rc;
 }
 
@@ -169,6 +176,12 @@ extern "C" int importKey_impl(const char* filename, const char* password, const 
 	gsk_buffer stream = {(unsigned int)((filelen+1)*sizeof(char)), (void*)buffer};
 	
 	int rc = gsk_import_key(*handle, label_e, password_e, &stream);
+
+    free(filename_e);
+    free(password_e);
+    free(label_e);
+    free(buffer);
+     
 	return rc;
 }
 
@@ -190,6 +203,7 @@ int importCertificate(char* filename, char* label, gsk_handle* handle) {
 	gsk_buffer stream = {(unsigned int)((filelen+1)*sizeof(char)), (void*)buffer};
 	
 	int rc = gsk_import_certificate(*handle, label, &stream);
+    free(buffer);
 	return rc;
 }
 

@@ -21,7 +21,7 @@ extern "C" int exportKeyToBuffer_impl(const char* password, const char* label, g
 extern "C" int exportCertToBuffer_impl(const char* label, gsk_buffer* stream, gsk_handle* handle);
 extern "C" int openKDB_impl( const char* filename, const char* password, gsk_handle* handle);
 extern "C" int openKeyRing_impl( const char* ring_name, gsk_handle* handle);
-extern "C" char* errorString_impl( int error );
+extern "C" char* errorString_impl( int err, char *errstr, int errstrlen );
 
 class ZCrypto : public Napi::ObjectWrap<ZCrypto> {
  public:

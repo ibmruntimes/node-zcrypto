@@ -97,9 +97,9 @@ Napi::Value ZCrypto::GetErrorString(const Napi::CallbackInfo &info) {
     return Napi::Number::New(env, -1);
   }
 
-  int error = info[0].As<Napi::Number>();
-
-  return Napi::String::New(env, errorString_impl(error));
+  int err = info[0].As<Napi::Number>();
+  char errstr[256];
+  return Napi::String::New(env, errorString_impl(err, errstr, sizeof(errstr)));
 }
 
 Napi::Value ZCrypto::OpenKDB(const Napi::CallbackInfo &info) {
