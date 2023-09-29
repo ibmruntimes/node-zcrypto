@@ -70,8 +70,6 @@ extern "C" int openKeyRing_impl( const char* ring_name, gsk_handle* handle) {
 }
 
 extern "C" int exportKeyToFile_impl(const char* filename, const char* password, const char* label, gsk_handle* handle) {
-    gsk_buffer stream = {0, 0};
-
     char * password_e = (char*)malloc(strlen(password) + 1);
     memcpy(password_e, password, strlen(password) + 1);
     __a2e_l(password_e, strlen(password_e) + 1);
@@ -80,17 +78,21 @@ extern "C" int exportKeyToFile_impl(const char* filename, const char* password, 
     memcpy(label_e, label, strlen(label) + 1);
     __a2e_l(label_e, strlen(label_e) + 1);
 
+    gsk_buffer stream = {0, 0};
     int rc = gsk_export_key(*handle, label_e, gskdb_export_pkcs12v3_binary,
                             x509_alg_pbeWithSha1And3DesCbc, password_e,
                             &stream);
 
     free(password_e);
     free(label_e);
-    if (rc !=0 ) { return rc; }
-
+    if (rc !=0 ) {
+      gsk_free_buffer(&stream);
+      return rc;
+    }
     FILE *fileptr;
     fileptr = fopen(filename, "wb");  // Open the file in binary mode
     write(fileno(fileptr), stream.data, stream.length);
+    gsk_free_buffer(&stream);
     fclose(fileptr); // Close the file
     fileptr = fopen(filename, "a+");  // Open the file in binary mode
     __chgfdccsid(fileno(fileptr), FT_BINARY);
@@ -99,19 +101,22 @@ extern "C" int exportKeyToFile_impl(const char* filename, const char* password, 
 }
 
 extern "C" int exportCertToFile_impl(const char* filename, const char* label, gsk_handle* handle) {
-    gsk_buffer stream = {0, 0};
-
     char * label_e = (char*)malloc(strlen(label) + 1);
     memcpy(label_e, label, strlen(label) + 1);
     __a2e_l(label_e, strlen(label_e) + 1);
 
+    gsk_buffer stream = {0, 0};
     int rc = gsk_export_certificate(*handle, label_e, gskdb_export_der_binary, &stream);
     free(label_e);
-    if (rc !=0 ) { return rc; }
+    if (rc !=0 ) {
+      gsk_free_buffer(&stream);
+      return rc;
+    }
 
     FILE *fileptr;
     fileptr = fopen(filename, "wb");  // Open the file in binary mode
     write(fileno(fileptr), stream.data, stream.length);
+    gsk_free_buffer(&stream);
     fclose(fileptr); // Close the file
     fileptr = fopen(filename, "a+");  // Open the file in binary mode
     __chgfdccsid(fileno(fileptr), FT_BINARY);
@@ -179,7 +184,8 @@ extern "C" int importKey_impl(const char* filename, const char* password, const 
     free(password_e);
     free(label_e);
     free(buffer);
-
+    if (stream.data != buffer)
+      gsk_free_buffer(&stream);
     return rc;
 }
 
@@ -202,6 +208,8 @@ int importCertificate(char* filename, char* label, gsk_handle* handle) {
 
     int rc = gsk_import_certificate(*handle, label, &stream);
     free(buffer);
+    if (stream.data != buffer)
+      gsk_free_buffer(&stream);
     return rc;
 }
 
@@ -214,6 +222,7 @@ int exportCertificate(char* filename, char* label, gsk_handle* handle) {
     FILE *fileptr;
     fileptr = fopen(filename, "wb");  // Open the file in binary mode
     fwrite(stream.data, stream.length, 1, fileptr);
+    gsk_free_buffer(&stream);
     fclose(fileptr); // Close the file
     return rc;
 }
