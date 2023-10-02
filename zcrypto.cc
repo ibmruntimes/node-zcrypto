@@ -33,7 +33,7 @@ ZCrypto::ZCrypto(const Napi::CallbackInfo& info) : Napi::ObjectWrap<ZCrypto>(inf
   Napi::Env env = info.Env();
   Napi::HandleScope scope(env);
 
-  this->initialized = 0; 
+  this->initialized = 0;
   this->handle = nullptr;
 }
 
@@ -97,9 +97,9 @@ Napi::Value ZCrypto::GetErrorString(const Napi::CallbackInfo &info) {
     return Napi::Number::New(env, -1);
   }
 
-  int error = info[0].As<Napi::Number>();
-
-  return Napi::String::New(env, errorString_impl(error));
+  int err = info[0].As<Napi::Number>();
+  char errstr[256];
+  return Napi::String::New(env, errorString_impl(err, errstr, sizeof(errstr)));
 }
 
 Napi::Value ZCrypto::OpenKDB(const Napi::CallbackInfo &info) {
@@ -164,6 +164,10 @@ Napi::Value ZCrypto::ExportKeyToFile(const Napi::CallbackInfo &info) {
   return Napi::Number::New(env, rc);
 }
 
+static void FinalizerCallback(Napi::Env env, void* finalizeData) {
+  free(finalizeData);
+}
+
 Napi::Value ZCrypto::ExportKeyToBuffer(const Napi::CallbackInfo &info) {
   Napi::Env env = info.Env();
   if (info.Length() < 2) {
@@ -184,10 +188,12 @@ Napi::Value ZCrypto::ExportKeyToBuffer(const Napi::CallbackInfo &info) {
     &(this->handle)
   );
 
-  if (rc != 0)
+  if (rc != 0) {
+    gsk_free_buffer(&stream);
     return Napi::Number::New(env, rc);
+  }
 
-  Napi::ArrayBuffer arrayBuffer = Napi::ArrayBuffer::New(env, (void*)(stream.data), stream.length);
+  Napi::ArrayBuffer arrayBuffer = Napi::ArrayBuffer::New(env, stream.data, stream.length, FinalizerCallback);
   return Napi::Uint8Array::New(env, stream.length, arrayBuffer, 0);
 }
 
@@ -205,10 +211,12 @@ Napi::Value ZCrypto::ExportCertToBuffer(const Napi::CallbackInfo &info) {
   gsk_buffer stream = {0, 0};
   int rc = exportCertToBuffer_impl(label.c_str(), &stream, &(this->handle));
 
-  if (rc != 0)
+  if (rc != 0) {
+    gsk_free_buffer(&stream);
     return Napi::Number::New(env, rc);
+  }
 
-  Napi::ArrayBuffer arrayBuffer = Napi::ArrayBuffer::New(env, (void*)(stream.data), stream.length);
+  Napi::ArrayBuffer arrayBuffer = Napi::ArrayBuffer::New(env, stream.data, stream.length, FinalizerCallback);
   return Napi::Uint8Array::New(env, stream.length, arrayBuffer, 0);
 }
 
