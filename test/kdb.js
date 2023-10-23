@@ -16,7 +16,7 @@ const tmp = require('tmp');
 describe("zcrypto validation", function() {
   it("check kdb", function(done) {
     var crypt = new zcrypto.ZCrypto();
-  
+
     var kdb_name = tmp.tmpNameSync({ dir: ".", prefix: 'a' });
 
     // Create a KDB file with a password, length and expiry time
@@ -29,7 +29,8 @@ describe("zcrypto validation", function() {
     // Import a P12 file as Cert.p12 using password and label
     // Update only allowed for KDB
     rc = crypt.importKey("Cert.p12", "password", "MYCERT3");
-    console.log(crypt.getErrorString(rc));
+    if (rc != 0)
+      console.log(crypt.getErrorString(rc));
     expect(rc == 0).to.be.true;
 
     // Export to P12 using password and label
@@ -51,7 +52,10 @@ describe("zcrypto validation", function() {
     if (fs.existsSync(p12_name)) {
         fs.unlinkSync(p12_name);
     }
-    
+
+    // test excplicitly closing the db (otherwise crypt's destructor does)
+    crypt.closeKDB();
+
     done();
     });
 
@@ -63,7 +67,7 @@ describe("zcrypto validation", function() {
 
     var pem = zcrypto.exportLabelToPEM(crypt, "ServerCert");
     expect(pem.key != undefined).to.be.true;
-    
+
     done();
     });
 
