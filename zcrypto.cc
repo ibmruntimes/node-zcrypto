@@ -16,6 +16,7 @@ Napi::Object ZCrypto::Init(Napi::Env env, Napi::Object exports) {
     InstanceMethod("exportCertToBuffer", &ZCrypto::ExportCertToBuffer),
     InstanceMethod("exportKeyToFile", &ZCrypto::ExportKeyToFile),
     InstanceMethod("openKDB", &ZCrypto::OpenKDB),
+    InstanceMethod("closeKDB", &ZCrypto::CloseKDB),
     InstanceMethod("createKDB", &ZCrypto::CreateKDB),
     InstanceMethod("openKeyRing", &ZCrypto::OpenKeyRing),
     InstanceMethod("importKey", &ZCrypto::ImportKey),
@@ -35,6 +36,11 @@ ZCrypto::ZCrypto(const Napi::CallbackInfo& info) : Napi::ObjectWrap<ZCrypto>(inf
 
   this->initialized = 0;
   this->handle = nullptr;
+}
+
+ZCrypto::~ZCrypto() {
+  if (handle != nullptr)
+    closeKDB_impl(&handle);
 }
 
 Napi::Value ZCrypto::CreateKDB(const Napi::CallbackInfo &info) {
@@ -105,7 +111,7 @@ Napi::Value ZCrypto::GetErrorString(const Napi::CallbackInfo &info) {
 Napi::Value ZCrypto::OpenKDB(const Napi::CallbackInfo &info) {
   Napi::Env env = info.Env();
   if (info.Length() < 2) {
-    Napi::Error::New(env, "OpenKDB needs 2 arguments "
+    Napi::Error::New(env, "openKDB needs 2 arguments "
                           "database, passphrase")
         .ThrowAsJavaScriptException();
     return Napi::Number::New(env, -1);
@@ -114,6 +120,19 @@ Napi::Value ZCrypto::OpenKDB(const Napi::CallbackInfo &info) {
   std::string passphrase = static_cast<std::string>(info[1].As<Napi::String>());
 
   int rc = openKDB_impl(database.c_str(), passphrase.c_str(), &(this->handle));
+
+  return Napi::Number::New(env, rc);
+}
+
+Napi::Value ZCrypto::CloseKDB(const Napi::CallbackInfo &info) {
+  Napi::Env env = info.Env();
+  if (info.Length() != 0) {
+    Napi::Error::New(env, "closeKDB doesn't require any argument.")
+        .ThrowAsJavaScriptException();
+    return Napi::Number::New(env, -1);
+  }
+
+  int rc = closeKDB_impl(&this->handle);
 
   return Napi::Number::New(env, rc);
 }

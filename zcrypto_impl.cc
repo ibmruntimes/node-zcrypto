@@ -48,6 +48,15 @@ extern "C" int openKDB_impl( const char* filename, const char* password, gsk_han
     return rc;
 }
 
+extern "C" int closeKDB_impl( gsk_handle* handle) {
+    if (handle == nullptr || *handle == nullptr)
+        return 0;
+    int orig = __ae_thread_swapmode(__AE_EBCDIC_MODE);
+    int rc = gsk_close_database( handle );
+    __ae_thread_swapmode(orig);
+    return rc;
+}
+
 extern "C" char* errorString_impl( int err, char *errstr, int errstrlen ) {
     int orig = __ae_thread_swapmode(__AE_EBCDIC_MODE);
     const char* errstr_e  = gsk_strerror( err );
