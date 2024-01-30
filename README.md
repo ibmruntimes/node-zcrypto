@@ -14,7 +14,8 @@ This is a [Node.js](https://nodejs.org/en/) module available through the
 [npm registry](https://www.npmjs.com/).
 -->
 
-IBM SDK for Node.js - z/OS 14.0 or IBM Open Enterprise SDK for Node.js 16 or higher is required.
+Before installing, [download and install IBM Open Enterprise SDK for Node.js](https://www.ibm.com/docs/en/sdk-nodejs-zos)
+16 or higher. zcrypto v1.4.0 or higher is required for Node.js 18 or higher.
 
 ## Simple to use
 
