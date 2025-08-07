@@ -22,6 +22,14 @@ function ArrayToString(array) {
   return out;
 }
 
+function reportIfError(obj, ret) {
+  // https://www.ibm.com/docs/en/zos/2.5.0?topic=reference-gsk-strerror
+  if (typeof ret !== "number" || ret === 0 || ret === 0x134CC000)
+    return false;
+  console.error("Error: " + obj.getErrorString(ret));
+  return true;
+}
+
 function derToPem(der) {
   var asnObj = forge.asn1.fromDer(der);
   var asn1Cert = forge.pki.certificateFromAsn1(asnObj);
@@ -91,31 +99,36 @@ function ConvertP12ToPKCS8(string, passphrase) {
 
 function exportKeysToPKCS8(obj, label, passphrase = "root") {
   var p12File = obj.exportKeyToBuffer(passphrase, label);
+  if (reportIfError(obj, p12File))
+    return p12File;
   return ConvertP12ToPKCS8(ArrayToString(p12File), passphrase);
 }
 
 function exportPublicKey(obj, label, passphrase = "root") {
   var p12File = obj.exportKeyToBuffer(passphrase, label);
+  if (reportIfError(obj, p12File))
+    return p12File;
   return ConvertP12ToPublicKey(ArrayToString(p12File), passphrase);
 }
 
 function exportKeysToPKCS1(obj, label, passphrase = "root") {
   var p12File = obj.exportKeyToBuffer(passphrase, label);
+  if (reportIfError(obj, p12File))
+    return p12File;
   return ConvertP12ToPKCS1(ArrayToString(p12File), passphrase);
 }
 
 function exportCertToPEM(obj, label) {
   var stream = obj.exportCertToBuffer(label);
-  if (typeof stream == "number" && stream != 0) {
-    console.log("Error: " + obj.getErrorString(stream));
+  if (reportIfError(obj, stream))
     return stream;
-  }
-
   return derToPem(ArrayToString(stream));
 }
 
 function exportP12FileToPEM(file, passphrase = "root") {
   var p12File = fs.readFileSync(file, "binary");
+  if (reportIfError(obj, p12File))
+    return p12File;
   return ConvertP12ToPEM(p12File, passphrase);
 }
 
