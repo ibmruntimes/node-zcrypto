@@ -7,7 +7,10 @@
     "build": "node-gyp build",
     "test": "./setup.sh && ./node_modules/.bin/mocha -b -t 40000 --reporter spec"
   },
-  "repository": "ibmruntimes/node-zcrypto",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/ibmruntimes/node-zcrypto.git"
+  },
   "keywords": [
     "zos",
     "crypto",
@@ -23,7 +26,7 @@
   "devDependencies": {
     "async": "^1.5.0",
     "chai": "^4.1.2",
-    "mocha": "^9.2.1"
+    "mocha": "^11.7.1"
   },
   "author": "Igor Todorovski",
   "license": "Apache-2.0"
