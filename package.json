@@ -7,7 +7,10 @@
     "build": "node-gyp build",
     "test": "./setup.sh && ./node_modules/.bin/mocha -b -t 40000 --reporter spec"
   },
-  "repository": "ibmruntimes/node-zcrypto",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/ibmruntimes/node-zcrypto.git"
+  },
   "keywords": [
     "zos",
     "crypto",
