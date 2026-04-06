@@ -88,9 +88,11 @@ extern "C" int exportKeyToFile_impl(const char* filename, const char* password, 
   __a2e_l(label_e, strlen(label_e) + 1);
 
   gsk_buffer stream = {0, 0};
+  int orig = __ae_thread_swapmode(__AE_EBCDIC_MODE);
   int rc = gsk_export_key(*handle, label_e, gskdb_export_pkcs12v3_binary,
                           x509_alg_pbeWithSha1And3DesCbc, password_e,
                           &stream);
+  __ae_thread_swapmode(orig);
 
   free(password_e);
   free(label_e);
@@ -115,7 +117,9 @@ extern "C" int exportCertToFile_impl(const char* filename, const char* label, gs
   __a2e_l(label_e, strlen(label_e) + 1);
 
   gsk_buffer stream = {0, 0};
+  int orig = __ae_thread_swapmode(__AE_EBCDIC_MODE);
   int rc = gsk_export_certificate(*handle, label_e, gskdb_export_der_binary, &stream);
+  __ae_thread_swapmode(orig);
   free(label_e);
   if (rc !=0 ) {
     gsk_free_buffer(&stream);
@@ -138,7 +142,9 @@ extern "C" int exportCertToBuffer_impl(const char* label, gsk_buffer* stream, gs
   memcpy(label_e, label, strlen(label) + 1);
   __a2e_l(label_e, strlen(label_e) + 1);
 
+  int orig = __ae_thread_swapmode(__AE_EBCDIC_MODE);
   int rc = gsk_export_certificate(*handle, label_e, gskdb_export_der_binary, stream);
+  __ae_thread_swapmode(orig);
   free(label_e);
   return rc;
 }
@@ -152,8 +158,10 @@ extern "C" int exportKeyToBuffer_impl(const char* password, const char* label, g
   memcpy(label_e, label, strlen(label) + 1);
   __a2e_l(label_e, strlen(label_e) + 1);
 
+  int orig = __ae_thread_swapmode(__AE_EBCDIC_MODE);
   int rc = gsk_export_key(*handle, label_e, gskdb_export_pkcs12v3_binary,
                           x509_alg_pbeWithSha1And3DesCbc, password_e, stream);
+  __ae_thread_swapmode(orig);
   free(password_e);
   free(label_e);
   return rc;
@@ -187,7 +195,9 @@ extern "C" int importKey_impl(const char* filename, const char* password, const 
 
   gsk_buffer stream = {(unsigned int)((filelen+1)*sizeof(char)), (void*)buffer};
 
+  int orig = __ae_thread_swapmode(__AE_EBCDIC_MODE);
   int rc = gsk_import_key(*handle, label_e, password_e, &stream);
+  __ae_thread_swapmode(orig);
 
   free(filename_e);
   free(password_e);
