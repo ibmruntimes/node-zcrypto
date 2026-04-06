@@ -4,6 +4,10 @@
  * US Government Users Restricted Rights - Use, duplication or disclosure restricted by GSA ADP Schedule Contract with IBM Corp.
  */
 
+#if !defined(__MVS__)
+#error This addon is for zos only
+#endif
+
 #ifndef __ZCRYPTO_H_
 #define __ZCRYPTO_H_ 1
 
@@ -48,8 +52,13 @@ class ZCrypto : public Napi::ObjectWrap<ZCrypto> {
 };
 
 
-#if !defined(__MVS__)
-#error This addon is for zos only
+#ifdef DEBUG
+char* getErrStr(int rc);
+void dbgPrintf(const char *fname, int linenum, const char *funcname,
+               const char *format, ...);
+#define DPRINTF(...) dbgPrintf(__FILE__, __LINE__, __FUNCTION__, __VA_ARGS__);
+#else
+#define DPRINTF(...) (void)0
 #endif
 
 #endif
