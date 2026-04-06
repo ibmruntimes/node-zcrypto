@@ -15,7 +15,9 @@
             ],
           }],
           [ "NODE_VERSION < 16", {
-            "cflags": [  "-qascii" ]
+            "cflags": [  "-qascii" ],
+          },{
+            "cflags": [  "-Wno-unknown-pragmas", "-Wno-trigraphs" ]
           }],
         ],
 
