@@ -215,7 +215,15 @@ int importCertificate(char* filename, char* label, gsk_handle* handle) {
 
   gsk_buffer stream = {(unsigned int)((filelen+1)*sizeof(char)), (void*)buffer};
 
-  int rc = gsk_import_certificate(*handle, label, &stream);
+  char *label_e = (char*)malloc(strlen(label) + 1);
+  memcpy(label_e, label, strlen(label) + 1);
+  __a2e_l(label_e, strlen(label_e) + 1);
+
+  int orig = __ae_thread_swapmode(__AE_EBCDIC_MODE);
+  int rc = gsk_import_certificate(*handle, label_e, &stream);
+  __ae_thread_swapmode(orig);
+  free(label_e);
+
   free(buffer);
   if (stream.data != buffer)
     gsk_free_buffer(&stream);
@@ -226,7 +234,14 @@ int importCertificate(char* filename, char* label, gsk_handle* handle) {
 int exportCertificate(char* filename, char* label, gsk_handle* handle) {
   gsk_buffer stream = {0, 0};
 
-  int rc = gsk_export_certificate (*handle, label, gskdb_export_der_binary, &stream);
+  char *label_e = (char*)malloc(strlen(label) + 1);
+  memcpy(label_e, label, strlen(label) + 1);
+  __a2e_l(label_e, strlen(label_e) + 1);
+
+  int orig = __ae_thread_swapmode(__AE_EBCDIC_MODE);
+  int rc = gsk_export_certificate (*handle, label_e, gskdb_export_der_binary, &stream);
+  __ae_thread_swapmode(orig);
+  free(label_e);
 
   FILE *fileptr;
   fileptr = fopen(filename, "wb");  // Open the file in binary mode
